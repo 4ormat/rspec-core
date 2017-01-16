@@ -337,3 +337,29 @@ Feature: shared examples
       """
       Could not find shared examples \"shared examples are isolated\"
       """
+  Scenario: Shared examples can be overriden with oit
+    Given a file named "overridden_shared_examples_spec.rb" with:
+      """Ruby
+      RSpec.describe "test" do
+        shared_examples "shared examples can be overridden" do
+          it "works" do
+            puts "Parent"; expect(true).to eq true
+          end
+        end
+
+        it_behaves_like "shared examples can be overridden" do
+          oit "works" do
+            puts "Child"; expect(true).to eq true
+          end
+        end
+      end
+      """
+    When I run `rspec overridden_shared_examples_spec.rb`
+    Then the output should not contain:
+      """
+      Parent
+      """
+    And the output should contain:
+      """
+      Child
+      """

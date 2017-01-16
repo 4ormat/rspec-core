@@ -919,4 +919,46 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
       expect(example.reporter).to be reporter
     end
   end
+
+  describe "overridding" do
+    it "doesn't override existing example when meta flag is not set" do
+      example1 = nil
+      example2 = nil
+      group = RSpec.describe do
+        example1 = it "can be overridden" do
+          expect(1).to eq 1
+        end
+        example2 = it "can be overridden" do
+          expect(1).to eq 1
+        end
+      end
+      expect(group.examples).to eq [example1, example2]
+    end
+
+    it "overridde existing example when meta flag is set" do
+      example2 = nil
+      group = RSpec.describe do
+        it "can be overridden" do
+          expect(1).to eq 1
+        end
+        example2 = it "can be overridden", override: true do
+          expect(1).to eq 1
+        end
+      end
+      expect(group.examples).to eq [example2]
+    end
+
+    it "overrides existing example using oit method" do
+      example2 = nil
+      group = RSpec.describe do
+        it "can be overriden" do
+          expect(1).to eq 1
+        end
+        example2 = oit "can be overriden" do
+          expect(1).to eq 1
+        end
+      end
+      expect(group.examples).to eq [example2]
+    end
+  end
 end

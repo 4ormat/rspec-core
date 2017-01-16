@@ -67,6 +67,9 @@ module RSpec
       # @return [Boolean] flag that will cause the example to not run.
       #   The {ExecutionResult} status will be `:pending`.
       delegate_to_metadata :skip
+      # @return [Boolean] flag that indicates that the example could override
+      #   other examples with the same name.
+      delegate_to_metadata :override
 
       # Returns the string submitted to `example` or its aliases (e.g.
       # `specify`, `it`, etc). If no string is submitted (e.g.
@@ -195,6 +198,7 @@ module RSpec
         # support code is called or be defined afterwards.
         # Begin defined beforehand but registered afterwards causes hooks to
         # not be applied where they should.
+        example_group_class.examples.delete_if {|ex| ex.description == description } if user_metadata[:override]
         example_group_class.examples << self
 
         @metadata = Metadata::ExampleHash.create(

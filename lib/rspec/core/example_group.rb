@@ -191,6 +191,9 @@ module RSpec
       # Shortcut to define an example with `:pending => true`
       # @see example
       define_example_method :pending,  :pending => true
+      # Shortcut to define an example with `:pending => true`
+      # @see example
+      define_example_method :oit,      :override => true
 
       # @!endgroup
 
